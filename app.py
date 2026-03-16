@@ -5,7 +5,7 @@ from music import music_player
 from database import create_table, add_entry, get_entries, register_user, login_user
 
 # ── PAGE CONFIG ──
-st.set_page_config(page_title="MindEase | Stress Relief", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="MindEase | Stress Relief", page_icon="logo.png", layout="wide")
 
 # ── CSS ──
 st.markdown("""
@@ -15,7 +15,7 @@ st.markdown("""
 html, body, [class*="css"] { font-family: 'Nunito', sans-serif; }
 
 .stApp {
-    background: linear-gradient(160deg, #eef6ee 0%, #f5f0f8 50%, #e8f4f0 100%);
+    background: linear-gradient(160deg, #f5f1e8 80%, #f5f1e8 100%);
     background-attachment: fixed;
 }
 
@@ -170,58 +170,109 @@ if "logged_in" not in st.session_state:
 def get_emoji(mood):
     return {"Happy": "😊", "Calm": "😌", "Neutral": "😐", "Stressed": "😰", "Sad": "😢", "Excited": "🤩"}.get(mood, "😐")
 # LOGIN PAGE
+# LOGIN PAGE
 if not st.session_state.logged_in:
 
-    st.title("🧠 MindEase Login")
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
-    tab1, tab2 = st.tabs(["Login", "Register"])
+    # CENTERED CONTAINER
+    left, center, right = st.columns([1,2,1])
 
-    with tab1:
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
+    with center:
 
-        if st.button("Login"):
-            user = login_user(username, password)
+        # CENTERED LOGO
+        logo_left, logo_center, logo_right = st.columns([2,2,2])
+        with logo_center:
+            st.image("logo.png", width=200)
 
-            if user:
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.success("Login successful!")
-                st.rerun()
-            else:
-                st.error("Invalid username or password")
+        st.markdown(
+        """
+        <div style="
+            background: rgba(255,255,255,0.85);
+            padding:35px;
+            border-radius:24px;
+            box-shadow:0 10px 35px rgba(45,74,45,0.12);
+            text-align:center;
+            margin-top:20px;
+        ">
+        <h2 style="color:#2d4a2d;">Welcome</h2>
+        <p style="color:#4a5a4a;">
+        Sign in to continue your wellness journey 🌿
+        </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+        )
 
-    with tab2:
-        new_user = st.text_input("Create Username")
-        new_pass = st.text_input("Create Password", type="password")
+        tab1, tab2 = st.tabs(["Login", "Register"])
 
-        if st.button("Register"):
-            if register_user(new_user, new_pass):
-                st.success("Account created! Please login.")
-            else:
-                st.error("Username already exists")
+        # LOGIN TAB
+        with tab1:
+
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+
+            btn_left, btn_center, btn_right = st.columns([2,2,1])
+
+            with btn_center:
+                login_clicked = st.button("Login")
+
+            if login_clicked:
+                user = login_user(username, password)
+
+                if user:
+                    st.session_state.logged_in = True
+                    st.session_state.username = username
+                    st.success("Login successful!")
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password")
+
+        # REGISTER TAB
+        with tab2:
+
+            new_user = st.text_input("Create Username")
+            new_pass = st.text_input("Create Password", type="password")
+
+            btn_left, btn_center, btn_right = st.columns([1,1,1])
+
+            with btn_center:
+                register_clicked = st.button("Register")
+
+            if register_clicked:
+                if register_user(new_user, new_pass):
+                    st.success("Account created! Please login.")
+                else:
+                    st.error("Username already exists")
+
+        
 
     st.stop()
 # ── SIDEBAR ──
-with st.sidebar:
-    st.title("🧠 MindEase")
-    st.write(f"Welcome, {st.session_state.username}")
-
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.rerun()
-
-    menu = st.radio("Navigate", [
-        "🏠 Home", "💙 Mood Detection", "🧘 Breathing Exercise",
-        "🎵 Calm Music Player", "📔 Personal Journal", "📚 Exam Stress Zone"
-    ])
-
-    st.markdown("---")
+with st.sidebar: 
+    st.image("logo.png", width=150) 
+    st.write(f"Welcome, {st.session_state.username}") 
+    if st.button("Logout"): 
+        st.session_state.logged_in = False 
+        st.rerun() 
+    menu = st.radio("Navigate", [ "🏠 Home", "💙 Mood Detection", "🧘 Breathing Exercise", "🎵 Calm Music Player", "📔 Personal Journal", "📚 Exam Stress Zone" ]) 
+    st.markdown("---") 
     st.markdown("*🌿 Take a breath. You're doing great.*")
-
 # ── HOME ──
 if menu == "🏠 Home":
-    st.title("MindEase — Your Wellness Companion 💙")
+    col1, col2, col3 = st.columns([3,1,3])
+    with col2:
+        st.image("logo.png", width=200)
+    
+    st.markdown("""
+        <div style="text-align:center;">
+            <h2 style="color:black;">
+                MindEase — Your Wellness Companion 💙
+            </h2>
+        </div>
+        """, unsafe_allow_html=True)    
+    st.markdown("")
+
     st.markdown("""
         <div style="text-align:center;">
             <h3 style="color:black;">
@@ -337,7 +388,25 @@ elif menu == "📚 Exam Stress Zone":
 
     tab1, tab2 = st.tabs(["⏳ Pomodoro Timer", "💡 Motivation"])
 
+    # ---------------- POMODORO TIMER ----------------
     with tab1:
+
+        st.markdown("""
+        ### What is the Pomodoro Technique? 🍅
+
+        The **Pomodoro Technique** is a time-management method where you study in 
+        **focused sessions followed by short breaks**.
+
+        Typical cycle:
+        - 📖 Study for **25 minutes**
+        - 🌿 Take a **5 minute break**
+        - 🔁 Repeat the cycle
+
+        This helps improve **focus, memory retention, and reduces burnout during exams.**
+        """)
+
+        st.divider()
+
         col1, col2 = st.columns(2)
         study = col1.number_input("Study (minutes)", 1, 60, 25)
         brk = col2.number_input("Break (minutes)", 1, 30, 5)
@@ -347,18 +416,38 @@ elif menu == "📚 Exam Stress Zone":
 
             for sec in range(study * 60, 0, -1):
                 m, s = divmod(sec, 60)
-                timer.markdown(f'<div class="breath-display">📖 Study Time<br>{m:02d}:{s:02d}</div>', unsafe_allow_html=True)
+                timer.markdown(
+                    f'<div class="breath-display">📖 Study Time<br>{m:02d}:{s:02d}</div>',
+                    unsafe_allow_html=True
+                )
                 time.sleep(1)
+
             st.success("✅ Study session done! Take your break.")
 
             for sec in range(brk * 60, 0, -1):
                 m, s = divmod(sec, 60)
-                timer.markdown(f'<div class="breath-display">🌿 Break Time<br>{m:02d}:{s:02d}</div>', unsafe_allow_html=True)
+                timer.markdown(
+                    f'<div class="breath-display">🌿 Break Time<br>{m:02d}:{s:02d}</div>',
+                    unsafe_allow_html=True
+                )
                 time.sleep(1)
+
             timer.empty()
             st.success("🎉 Break complete! Great session.")
 
+    # ---------------- MOTIVATION ----------------
     with tab2:
+
+        st.markdown("### 🌟 Study Motivation")
+
+        st.markdown("""
+        Feeling overwhelmed before exams is normal.  
+        Take a breath, reset your focus, and remind yourself why you started.  
+        Click below whenever you need a **quick boost of motivation.**
+        """)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
         quotes = [
             "Success is built on small daily efforts.",
             "Exams test knowledge, not your worth as a person.",
@@ -367,5 +456,27 @@ elif menu == "📚 Exam Stress Zone":
             "Stay consistent. Rest is part of the process.",
             "Every expert was once a beginner who kept going."
         ]
-        if st.button("✨ Get Motivation"):
-            st.info(f"💬 *{random.choice(quotes)}*")
+
+        col1, col2, col3 = st.columns([1,2,1])
+
+        with col2:
+            if st.button("✨ Get Motivation"):
+
+                quote = random.choice(quotes)
+
+                st.markdown(
+                f"""
+                <div style="
+                background:#ffffff;
+                padding:30px;
+                border-radius:18px;
+                text-align:center;
+                box-shadow:0 8px 20px rgba(0,0,0,0.1);
+                font-size:20px;
+                color:#2d4a2d;
+                ">
+                💬 <i>{quote}</i>
+                </div>
+                """,
+                unsafe_allow_html=True
+                )
